@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>countdown<3</title>
+  <title>Berni's Wolf Countdown · Shared Countdown</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      user-select: none; /* just for smoother UI, text selection still possible if needed */
+      user-select: none;
     }
 
     /* ========== GLOBAL VARIABLES & TRANSITIONS ========== */
@@ -20,22 +20,18 @@
       --text-primary: #a0a0a0;
       --text-glow: #808080;
       --accent-color: #7c6e65;
-      --wolf-icon-filter: none;
       --btn-bg: #2e3b3e;
       --btn-hover: #4e5f64;
       --shadow-color: rgba(0, 0, 0, 0.5);
       --border-glow: 1px solid rgba(255, 255, 255, 0.15);
-      --rainbow-bg-start: #ff9a9e;
-      --rainbow-bg-end: #fad0c4;
       --transition: background 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1), 
                     box-shadow 0.3s, border-color 0.3s, color 0.3s;
     }
 
-    /* dark LONE WOLF theme (default) */
     body {
       min-height: 100vh;
       background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-      font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+      font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -45,7 +41,6 @@
       overflow-x: hidden;
     }
 
-    /* dark / wolf-specific elements */
     .wolf-bg-overlay {
       position: fixed;
       top: 0;
@@ -60,7 +55,6 @@
       transition: opacity 0.5s ease;
     }
 
-    /* RAINBOW / jolly theme class (added by JS after 16:00) */
     body.rainbow-mode {
       --bg-gradient-start: #fbc2eb;
       --bg-gradient-end: #a6c1ee;
@@ -83,13 +77,11 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* rainbow overlay: extra sparkles */
     body.rainbow-mode .wolf-bg-overlay {
       opacity: 0;
       visibility: hidden;
     }
 
-    /* additional rainbow effects: floating emojis / jolly indicators */
     .rainbow-extra {
       display: none;
     }
@@ -111,7 +103,6 @@
       50%{ transform: translateY(-10px); }
     }
 
-    /* main card */
     .countdown-card {
       position: relative;
       z-index: 10;
@@ -127,7 +118,6 @@
       text-align: center;
     }
 
-    /* wolf / theme header */
     .title-section {
       display: flex;
       align-items: center;
@@ -163,19 +153,11 @@
       transition: transform 0.2s ease;
     }
 
-    body.rainbow-mode .wolf-icon {
-      content: "🌈🦄";
-      filter: drop-shadow(0 0 6px gold);
-      animation: spinGlitter 0.8s infinite alternate;
-    }
-
-    /* dynamic wolf/rainbow emoji switch will be handled via JS but we keep base */
     .dynamic-emoji {
       font-size: 2.4rem;
       transition: all 0.2s;
     }
 
-    /* timer display */
     .timer-box {
       display: flex;
       justify-content: center;
@@ -223,7 +205,6 @@
       font-weight: bold;
     }
 
-    /* status message + quote */
     .status-message {
       font-size: 1.2rem;
       font-weight: 600;
@@ -250,7 +231,6 @@
       color: #b0b0b0;
     }
 
-    /* time settings panel: editable countdown */
     .settings-panel {
       margin-top: 2rem;
       background: rgba(0, 0, 0, 0.3);
@@ -321,6 +301,12 @@
       color: #aaaaaa;
     }
 
+    .loading-indicator {
+      font-size: 0.7rem;
+      margin-top: 5px;
+      color: #888888;
+    }
+
     footer {
       margin-top: 2rem;
       font-size: 0.7rem;
@@ -344,7 +330,7 @@
 <div class="countdown-card">
   <div class="title-section">
     <span class="wolf-icon dynamic-emoji" id="themeEmoji">🐺🌙</span>
-    <h1>countdown<3</h1>
+    <h1>countdown&lt;3</h1>
   </div>
 
   <div class="timer-box" id="timerBox">
@@ -363,40 +349,33 @@
 
   <div class="settings-panel">
     <div class="input-group">
-      <label>📅 Set Target:</label>
+      <label>📅 Set Target (for everyone):</label>
       <input type="datetime-local" id="targetDateTime" class="datetime-input" step="1">
-      <button id="updateTargetBtn">🕒 Set</button>
+      <button id="updateTargetBtn">🕒 Set for Everyone</button>
     </div>
     
-    <!-- FIXED: Added back the missing current target display element -->
     <div class="current-target" id="currentTargetDisplay">
-      🎯 Current target: --/--/-- --:--
+      🎯 Loading shared target...
     </div>
-
-    <div style="font-size:0.7rem; margin-top:8px; text-decoration-color: #808080;">💡 Tip: vegyel yaninak egy monstert</div>
+    <div class="loading-indicator" id="loadingIndicator"></div>
+    <div style="font-size:0.7rem; margin-top:8px;">💡 Anyone who visits will see the same countdown! Pick a date/time.</div>
   </div>
+  <footer>🐺 shared countdown · everyone sees the same time</footer>
 </div>
 
 <script>
-  // -------------------- CONFIGURATION --------------------
-  // Default target: today at 16:00, but user can change.
-  // We'll store as timestamp (ms) in a variable.
-  let targetTimestamp = null;       // milliseconds
-  let dynamicTargetDate = null;     // Date object for reference
+  // ============================================================
+  // YOUR JSONBin.io CONFIGURATION - CHANGE THIS ONE THING!
+  // ============================================================
+  const JSONBIN_API_KEY = '$2a$10$2DDRvM2xJ7oXCNnhTzVUY.tGB4mQupLVZPJuFf4ctgrAVJAqMwpJS';  // <-- PUT YOUR API KEY HERE
   
-  // helper: get today at 16:00 default (if no custom set)
-function getDefaultToday1600() {
-  const now = new Date();
-  const today1600 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 16, 0, 0, 0);
-  // Don't automatically go to tomorrow - if it's past 16:00, stay finished
-  return today1600;
-}
+  // You'll get this after first run - leave empty for now, it will auto-create
+  let BIN_ID = localStorage.getItem('countdown_bin_id') || null;
+  // ============================================================
   
-  // initial target: today at 16:00 (or next day if passed)
-  let currentTargetDate = getDefaultToday1600();
-  targetTimestamp = currentTargetDate.getTime();
+  const JSONBIN_BASE_URL = 'https://api.jsonbin.io/v3';
   
-  // UI elements
+  // UI Elements
   const daysSpan = document.getElementById('days');
   const hoursSpan = document.getElementById('hours');
   const minutesSpan = document.getElementById('minutes');
@@ -407,19 +386,12 @@ function getDefaultToday1600() {
   const targetDateTimeInput = document.getElementById('targetDateTime');
   const updateBtn = document.getElementById('updateTargetBtn');
   const currentTargetDisplaySpan = document.getElementById('currentTargetDisplay');
+  const loadingIndicator = document.getElementById('loadingIndicator');
   
-  // theme & rainbow logic based on current time & also special flag when it's AFTER WORK HOURS (16:00 or custom target reached)
-  // but we also need the "jolly theme" when FINISHED: meaning "remaining time <= 0" OR it's after 16:00 based on real-time clock AND target was today's 16:00?
-  // better logic: theme becomes JOLLY if current time is >= targetTimestamp (countdown finished) OR if work is finished (target reached)
-  // Additionally for fun: at exactly >= 16:00 on weekdays, but since she can set any target we align with countdown finish.
-  // We'll also set a "jolly mode" when remaining time <= 0.
+  let targetTimestamp = null;
+  let currentTargetDate = null;
   
-  // For dark lone wolf theme: active when countdown not finished. Rainbow / jolly when countdown finished (remaining <= 0)
-  // And we also add vibrant quotes.
-  
-  // Also add manual forced 'jolly' if we detect current time > = target.
-  
-  // Quotes and funny messages - short and personal
+  // Quotes - YOUR CUSTOM QUOTES HERE
   const wolfQuotes = [
     "suffering",
     "pain.",
@@ -440,79 +412,213 @@ function getDefaultToday1600() {
     "im gay",
     "AYAYAYAYAYAYAY",
     "YIPPEEEEEE",
-    "bag chaser"
+    "bag chaser",
     "joy",
     "YOU BROUGHT THAT DOUGH IN",
   ];
   
-  // update theme styles based on countdown finished or not (remaining <= 0)
+  function showLoading(message) {
+    if (loadingIndicator) loadingIndicator.innerHTML = message;
+  }
+  
+  function hideLoading() {
+    if (loadingIndicator) loadingIndicator.innerHTML = '';
+  }
+  
+  // Create a new bin on JSONBin.io
+  async function createBin(targetDate) {
+    showLoading('Creating shared countdown...');
+    try {
+      const response = await fetch(`${JSONBIN_BASE_URL}/b`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': JSONBIN_API_KEY,
+          'X-Bin-Name': 'berni_countdown_shared',
+          'X-Bin-Private': 'false'
+        },
+        body: JSON.stringify({
+          target: targetDate.toISOString(),
+          lastUpdated: new Date().toISOString()
+        })
+      });
+      
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      BIN_ID = data.metadata.id;
+      localStorage.setItem('countdown_bin_id', BIN_ID);
+      hideLoading();
+      return true;
+    } catch (error) {
+      console.error('Create bin error:', error);
+      hideLoading();
+      statusMsgDiv.innerHTML = '⚠️ Failed to create shared countdown. Check API key?';
+      return false;
+    }
+  }
+  
+  // Load target from JSONBin.io
+  async function loadTargetFromCloud() {
+    if (!JSONBIN_API_KEY || JSONBIN_API_KEY === 'YOUR_MASTER_KEY_HERE') {
+      currentTargetDisplaySpan.innerHTML = '⚠️ Please set your JSONBin API key in the code!';
+      statusMsgDiv.innerHTML = '⚠️ API key missing - edit the code';
+      return false;
+    }
+    
+    // If no bin exists yet, create one with default (today 16:00 or next)
+    if (!BIN_ID) {
+      const defaultDate = getDefaultToday1600();
+      const created = await createBin(defaultDate);
+      if (created) {
+        return await loadTargetFromCloud(); // Retry loading after creation
+      }
+      return false;
+    }
+    
+    showLoading('Loading shared countdown...');
+    try {
+      const response = await fetch(`${JSONBIN_BASE_URL}/b/${BIN_ID}/latest`, {
+        method: 'GET',
+        headers: {
+          'X-Master-Key': JSONBIN_API_KEY
+        }
+      });
+      
+      if (response.status === 404) {
+        // Bin doesn't exist anymore, clear and recreate
+        localStorage.removeItem('countdown_bin_id');
+        BIN_ID = null;
+        const defaultDate = getDefaultToday1600();
+        await createBin(defaultDate);
+        return await loadTargetFromCloud();
+      }
+      
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      
+      const data = await response.json();
+      const targetDate = new Date(data.record.target);
+      currentTargetDate = targetDate;
+      targetTimestamp = targetDate.getTime();
+      
+      updateTargetDisplay();
+      hideLoading();
+      return true;
+    } catch (error) {
+      console.error('Load error:', error);
+      hideLoading();
+      currentTargetDisplaySpan.innerHTML = '⚠️ Error loading shared target. Using local fallback.';
+      return false;
+    }
+  }
+  
+  // Save target to JSONBin.io (updates for everyone!)
+  async function saveTargetToCloud(newDate) {
+    if (!JSONBIN_API_KEY || JSONBIN_API_KEY === 'YOUR_MASTER_KEY_HERE') {
+      alert('Please set your JSONBin API key in the code first!');
+      return false;
+    }
+    
+    // If no bin exists, create one first
+    if (!BIN_ID) {
+      const created = await createBin(newDate);
+      if (created) {
+        // After creation, load to confirm
+        await loadTargetFromCloud();
+        return true;
+      }
+      return false;
+    }
+    
+    showLoading('Saving to cloud for everyone...');
+    try {
+      const response = await fetch(`${JSONBIN_BASE_URL}/b/${BIN_ID}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': JSONBIN_API_KEY
+        },
+        body: JSON.stringify({
+          target: newDate.toISOString(),
+          lastUpdated: new Date().toISOString()
+        })
+      });
+      
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      
+      currentTargetDate = newDate;
+      targetTimestamp = newDate.getTime();
+      updateTargetDisplay();
+      hideLoading();
+      statusMsgDiv.innerHTML = '✓ Updated for everyone! 🎉';
+      setTimeout(() => {
+        if (!document.body.classList.contains('rainbow-mode')) {
+          statusMsgDiv.innerHTML = getCustomStatusMessage((targetTimestamp - new Date().getTime())/1000, false);
+        }
+      }, 2000);
+      return true;
+    } catch (error) {
+      console.error('Save error:', error);
+      hideLoading();
+      alert('Failed to save to cloud. Check your API key and internet connection.');
+      return false;
+    }
+  }
+  
+  // Helper: get today at 16:00 (default)
+  function getDefaultToday1600() {
+    const now = new Date();
+    const today1600 = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 16, 0, 0, 0);
+    return today1600;
+  }
+  
   function updateThemeAndMessages(remainingMs) {
     const isFinished = (remainingMs <= 0);
     const bodyElement = document.body;
     
     if (isFinished) {
-      // apply rainbow mode if not already
       if (!bodyElement.classList.contains('rainbow-mode')) {
         bodyElement.classList.add('rainbow-mode');
       }
-      // update emoji & greeting
       themeEmojiSpan.innerHTML = "🌈🎉";
-      // status message dynamic with extra joy (set by timer tick but we update)
       if (statusMsgDiv.innerText !== "its over") {
         statusMsgDiv.innerHTML = "its over";
       }
-      // pick random rainbow quote for extra fun
       const randIdx = Math.floor(Math.random() * rainbowQuotes.length);
       quoteMsgSpan.innerHTML = rainbowQuotes[randIdx];
     } else {
-      // dark wolf theme
       if (bodyElement.classList.contains('rainbow-mode')) {
         bodyElement.classList.remove('rainbow-mode');
       }
       themeEmojiSpan.innerHTML = "🐺🌙";
-      // refresh wolf quote occasionally but not spam, random on each tick
       const randWolf = Math.floor(Math.random() * wolfQuotes.length);
-      // avoid updating every second too aggressively but it's fun
       quoteMsgSpan.innerHTML = wolfQuotes[randWolf];
-      // status msg updated in updateCountdownDisplay for remaining context.
     }
   }
   
-  // Extra: customize status message based on time left and theme - short and not corny
   function getCustomStatusMessage(remainingSec, isFinished) {
-    if (isFinished) {
-      return "its over";
-    }
-    if (remainingSec <= 300) { // less than 5 min
-      return "🐺 almost there";
-    } else if (remainingSec <= 3600) {
-      return "⏳ soon";
-    } else {
-      return "🐺 suffering";
-    }
+    if (isFinished) return "its over";
+    if (remainingSec <= 300) return "🐺 almost there";
+    if (remainingSec <= 3600) return "⏳ soon";
+    return "🐺 suffering";
   }
   
-  // update countdown numbers & themes
   function updateCountdownDisplay() {
+    if (!targetTimestamp) return;
+    
     const now = new Date().getTime();
     let remaining = targetTimestamp - now;
     let isFinished = remaining <= 0;
     
     if (isFinished) {
-      // ensure zeros display and final theme activation
       daysSpan.innerText = "00";
       hoursSpan.innerText = "00";
       minutesSpan.innerText = "00";
       secondsSpan.innerText = "00";
-      
-      // update theme and messages
       updateThemeAndMessages(0);
-      const customMsg = getCustomStatusMessage(0, true);
-      statusMsgDiv.innerHTML = customMsg;
+      statusMsgDiv.innerHTML = getCustomStatusMessage(0, true);
       return;
     }
     
-    // positive remaining
     const totalSeconds = Math.floor(remaining / 1000);
     const days = Math.floor(totalSeconds / 86400);
     const hours = Math.floor((totalSeconds % 86400) / 3600);
@@ -524,22 +630,25 @@ function getDefaultToday1600() {
     minutesSpan.innerText = minutes < 10 ? "0" + minutes : minutes;
     secondsSpan.innerText = seconds < 10 ? "0" + seconds : seconds;
     
-    // update theme (dark mode active since not finished)
     updateThemeAndMessages(remaining);
-    const customStatus = getCustomStatusMessage(totalSeconds, false);
-    statusMsgDiv.innerHTML = customStatus;
+    statusMsgDiv.innerHTML = getCustomStatusMessage(totalSeconds, false);
     
-    // ensure wolf-themed quote randomness
-    const randQuote = wolfQuotes[Math.floor(Math.random() * wolfQuotes.length)];
     if (!document.body.classList.contains('rainbow-mode')) {
+      const randQuote = wolfQuotes[Math.floor(Math.random() * wolfQuotes.length)];
       quoteMsgSpan.innerHTML = randQuote;
-    } else {
-      const rq = rainbowQuotes[Math.floor(Math.random() * rainbowQuotes.length)];
-      quoteMsgSpan.innerHTML = rq;
     }
   }
   
-  // format datetime-local value from Date object (YYYY-MM-DDThh:mm)
+  function updateTargetDisplay() {
+    if (currentTargetDate) {
+      const formatted = currentTargetDate.toLocaleString(undefined, { 
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' 
+      });
+      currentTargetDisplaySpan.innerHTML = `🎯 Shared target: ${formatted} (everyone sees this)`;
+      targetDateTimeInput.value = formatDatetimeLocal(currentTargetDate);
+    }
+  }
+  
   function formatDatetimeLocal(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -549,11 +658,10 @@ function getDefaultToday1600() {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
   
-  // update target from UI input
-  function setNewTargetFromInput() {
+  async function setNewTargetFromInput() {
     const inputVal = targetDateTimeInput.value;
     if (!inputVal) {
-      alert("Please select a valid date & time (e.g., tomorrow 16:00 or any future moment)");
+      alert("Please select a date & time");
       return;
     }
     const newDate = new Date(inputVal);
@@ -561,100 +669,43 @@ function getDefaultToday1600() {
       alert("Invalid date");
       return;
     }
-    const now = new Date();
-    if (newDate <= now) {
-      // if user selects past time, automatically set but countdown will be finished -> rainbow jolly theme.
-      // we allow it because maybe she wants rainbow now? It's okay, let's permit but warn?
-      if (confirm("The selected time is in the past. This will instantly trigger the JOLLY RAINBOW theme! Continue?")) {
-        targetTimestamp = newDate.getTime();
-        currentTargetDate = newDate;
-        updateTargetDisplay();
-        updateCountdownDisplay(); // immediate refresh
-        return;
-      } else {
-        return;
-      }
+    await saveTargetToCloud(newDate);
+  }
+  
+  // Initialize everything
+  async function init() {
+    // Check if API key is set
+    if (!JSONBIN_API_KEY || JSONBIN_API_KEY === 'YOUR_MASTER_KEY_HERE') {
+      currentTargetDisplaySpan.innerHTML = '⚠️ EDIT THE CODE: Put your JSONBin API key in the script!';
+      statusMsgDiv.innerHTML = '⚠️ Set your API key first ☝️';
+      // Still run local countdown with default
+      currentTargetDate = getDefaultToday1600();
+      targetTimestamp = currentTargetDate.getTime();
+      updateTargetDisplay();
+    } else {
+      await loadTargetFromCloud();
     }
-    targetTimestamp = newDate.getTime();
-    currentTargetDate = newDate;
-    updateTargetDisplay();
+    
     updateCountdownDisplay();
+    setInterval(() => updateCountdownDisplay(), 1000);
   }
   
-  // update the "current target" text
-  function updateTargetDisplay() {
-    if (currentTargetDate && currentTargetDisplaySpan) {
-      const formatted = currentTargetDate.toLocaleString(undefined, { 
-        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' 
-      });
-      currentTargetDisplaySpan.innerHTML = `🎯 Current target: ${formatted}`;
-    } else if (currentTargetDisplaySpan) {
-      currentTargetDisplaySpan.innerHTML = `🎯 No target set.`;
-    }
-    // set datetime-local input to current target value for consistency
-    if (currentTargetDate && !isNaN(currentTargetDate.getTime())) {
-      targetDateTimeInput.value = formatDatetimeLocal(currentTargetDate);
-    }
-  }
-  
-  // init default or load from local? initial default today 16:00
-  function initDefaultAndSyncUI() {
-    currentTargetDate = getDefaultToday1600();
-    targetTimestamp = currentTargetDate.getTime();
-    updateTargetDisplay();
-    updateCountdownDisplay();
-    // start timer tick
-    setInterval(() => {
-      updateCountdownDisplay();
-    }, 1000);
-  }
-  
-  // reset to typical 16:00 (today or next)
-  function resetToWorkFinishTime() {
-    currentTargetDate = getDefaultToday1600();
-    targetTimestamp = currentTargetDate.getTime();
-    updateTargetDisplay();
-    updateCountdownDisplay();
-    // optional: show message
-    statusMsgDiv.innerHTML = "🐺 reset to 16:00";
-    setTimeout(() => {
-      if (!document.body.classList.contains('rainbow-mode')) 
-        statusMsgDiv.innerHTML = getCustomStatusMessage((targetTimestamp - new Date().getTime())/1000, false);
-    }, 1500);
-  }
-  
-  // additional handling: if reset button? we add a tiny inline reset (optional) but we already have update, provide set default action.
-  // Buttons: "updateTargetBtn" triggers setNewTargetFromInput.
   updateBtn.addEventListener('click', setNewTargetFromInput);
   
-  // optional: add small helper for 'set to next 16:00' but to be complete, we add a hidden reset? we can add an extra button inside setting panel but we will attach small secondary button? Let's add a "Reset to 16:00" near input for usability.
+  // Add reset button
   const resetButton = document.createElement('button');
-  resetButton.innerText = "🐺 Reset to next 16:00";
+  resetButton.innerText = "🐺 Reset to Today 16:00";
   resetButton.style.marginLeft = "12px";
   resetButton.style.background = "#4a5b66";
-  resetButton.addEventListener('click', resetToWorkFinishTime);
+  resetButton.addEventListener('click', async () => {
+    const defaultDate = getDefaultToday1600();
+    await saveTargetToCloud(defaultDate);
+  });
   const inputGroupDiv = document.querySelector('.input-group');
   inputGroupDiv.appendChild(resetButton);
-  
-  // adjust css for button
   resetButton.style.marginTop = "5px";
-  // fix emoji after reset
   
-  // initial display update
-  initDefaultAndSyncUI();
-  
-  // Also force theme update on each resize / just in case
-  window.addEventListener('load', () => {
-    updateCountdownDisplay();
-    // add a subtle radial gradient for rainbow extra fun
-  });
-  
-  // for any manual correction when theme swaps, trigger final check
-  setInterval(() => {
-    if (targetTimestamp <= new Date().getTime()) {
-      updateThemeAndMessages(0);
-    }
-  }, 2000);
+  init();
 </script>
 </body>
 </html>

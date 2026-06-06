@@ -3,27 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Berni's Wolf Countdown · Shared Countdown</title>
+  <title>countdown<3</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      user-select: none;
     }
 
     /* ========== GLOBAL VARIABLES & TRANSITIONS ========== */
     :root {
-      --bg-gradient-start: #0a0f1e;
-      --bg-gradient-end: #0b1525;
-      --card-bg: rgba(10, 20, 30, 0.75);
-      --text-primary: #a0a0a0;
+      --bg-gradient-start: #1a1a1a;
+      --bg-gradient-end: #2a2a2a;
+      --card-bg: rgba(25, 25, 30, 0.85);
+      --text-primary: #b0b0b0;
       --text-glow: #808080;
       --accent-color: #7c6e65;
-      --btn-bg: #2e3b3e;
-      --btn-hover: #4e5f64;
+      --btn-bg: #3a3a3a;
+      --btn-hover: #555555;
       --shadow-color: rgba(0, 0, 0, 0.5);
-      --border-glow: 1px solid rgba(255, 255, 255, 0.15);
+      --border-glow: 1px solid rgba(200, 200, 200, 0.2);
       --transition: background 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1), 
                     box-shadow 0.3s, border-color 0.3s, color 0.3s;
     }
@@ -31,7 +30,7 @@
     body {
       min-height: 100vh;
       background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-      font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, sans-serif;
+      font-family: 'Courier New', 'Lucida Console', 'Monaco', monospace;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -41,6 +40,19 @@
       overflow-x: hidden;
     }
 
+    /* vintage film grain effect */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 1px, transparent 1px, transparent 2px);
+      z-index: 1;
+    }
+
     .wolf-bg-overlay {
       position: fixed;
       top: 0;
@@ -48,38 +60,41 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" opacity="0.12"><path fill="none" stroke="%238c9aa5" stroke-width="1.5" d="M150 320 L190 260 L230 310 L270 240 L310 290 L350 210 L390 280 L420 230 L450 290 L490 220 L530 280 L570 250 L610 310 L650 270 L690 320 L730 280 L750 330" stroke-dasharray="3 3"/><circle cx="200" cy="420" r="2" fill="%23aabbcc"/><circle cx="560" cy="480" r="3" fill="%2390a0b0"/><path d="M70 500 L130 470 L180 510 L240 460 L300 520 L360 470 L430 530 L510 490 L580 540 L660 500 L740 530" stroke="%23707a86" stroke-width="2" fill="none" stroke-dasharray="4 2"/><text x="30" y="80" font-size="14" fill="%236b7c8c" font-family="monospace">🐺 howl of the midnight</text></svg>');
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" opacity="0.08"><path fill="none" stroke="%23888888" stroke-width="1" d="M150 320 L190 260 L230 310 L270 240 L310 290 L350 210 L390 280 L420 230 L450 290 L490 220 L530 280 L570 250 L610 310 L650 270 L690 320 L730 280 L750 330" stroke-dasharray="2 3"/><circle cx="200" cy="420" r="2" fill="%23aaaaaa"/><circle cx="560" cy="480" r="2" fill="%23999999"/><path d="M70 500 L130 470 L180 510 L240 460 L300 520 L360 470 L430 530 L510 490 L580 540 L660 500 L740 530" stroke="%23888888" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/></svg>');
       background-repeat: repeat;
-      background-size: 240px;
+      background-size: 200px;
       z-index: 0;
       transition: opacity 0.5s ease;
     }
 
+    /* JOLLY / soft vintage movie theme - less pink, more warm */
     body.rainbow-mode {
-      --bg-gradient-start: #fbc2eb;
-      --bg-gradient-end: #a6c1ee;
-      --card-bg: rgba(255, 250, 240, 0.92);
-      --text-primary: #2d1b4e;
-      --text-glow: #ffb347;
-      --accent-color: #ff7e5e;
-      --btn-bg: #ffb347;
-      --btn-hover: #ff9f2e;
-      --shadow-color: rgba(0, 0, 0, 0.2);
-      --border-glow: 2px solid rgba(255, 215, 0, 0.5);
-      background: linear-gradient(135deg, #fbc2eb, #a6c1ee, #fddb92);
+      --bg-gradient-start: #faf3e8;
+      --bg-gradient-end: #f0e6d8;
+      --card-bg: rgba(250, 245, 240, 0.88);
+      --text-primary: #8b7a6b;
+      --text-glow: #d4c5b0;
+      --accent-color: #b8a99a;
+      --btn-bg: #e8ddd0;
+      --btn-hover: #d4c4b0;
+      --shadow-color: rgba(0, 0, 0, 0.08);
+      --border-glow: 1px solid rgba(180, 160, 140, 0.3);
+      background: linear-gradient(135deg, #faf3e8, #f5ecd8, #efe2d0);
       background-size: 180% 180%;
-      animation: gentleRainbowShift 12s ease infinite;
+      animation: gentleFlicker 12s ease infinite;
+      font-family: 'Courier New', 'Lucida Console', monospace;
     }
 
-    @keyframes gentleRainbowShift {
+    @keyframes gentleFlicker {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
     body.rainbow-mode .wolf-bg-overlay {
-      opacity: 0;
-      visibility: hidden;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" opacity="0.04"><path fill="none" stroke="%239a8a7a" stroke-width="0.8" d="M150 320 L190 260 L230 310 L270 240 L310 290 L350 210 L390 280 L420 230 L450 290 L490 220 L530 280 L570 250 L610 310 L650 270 L690 320 L730 280 L750 330"/><circle cx="200" cy="420" r="1.5" fill="%23b8a69a"/><circle cx="560" cy="480" r="1.5" fill="%23b8a69a"/></svg>');
+      opacity: 0.3;
+      visibility: visible;
     }
 
     .rainbow-extra {
@@ -89,18 +104,15 @@
     body.rainbow-mode .rainbow-extra {
       display: block;
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      font-size: 2.5rem;
-      filter: drop-shadow(0 0 6px gold);
+      bottom: 15px;
+      right: 15px;
+      font-size: 1.2rem;
+      filter: drop-shadow(0 0 1px #d4c5b0);
       pointer-events: none;
-      animation: bounceHappy 1.4s infinite;
+      animation: none;
       z-index: 10;
-    }
-
-    @keyframes bounceHappy {
-      0%,100%{ transform: translateY(0); }
-      50%{ transform: translateY(-10px); }
+      opacity: 0.4;
+      letter-spacing: 2px;
     }
 
     .countdown-card {
@@ -109,13 +121,14 @@
       max-width: 700px;
       width: 100%;
       background: var(--card-bg);
-      backdrop-filter: blur(14px);
-      border-radius: 3rem;
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
       padding: 2rem 1.8rem;
-      box-shadow: 0 25px 45px var(--shadow-color);
+      box-shadow: 0 15px 35px var(--shadow-color);
       border: var(--border-glow);
       transition: var(--transition);
       text-align: center;
+      image-rendering: crisp-edges;
     }
 
     .title-section {
@@ -128,204 +141,238 @@
     }
 
     .title-section h1 {
-      font-size: 2.2rem;
-      letter-spacing: -0.5px;
-      font-weight: 800;
-      background: linear-gradient(135deg, #d4dcec, #b7c2d3);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      text-shadow: 0 2px 3px rgba(0,0,0,0.2);
+      font-size: 2rem;
+      letter-spacing: 1px;
+      font-weight: 400;
+      font-family: inherit;
+      background: none;
+      color: #a0a0a0;
+      text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
       transition: 0.3s;
     }
 
     body.rainbow-mode .title-section h1 {
-      background: linear-gradient(135deg, #ff4d6d, #f9c74f, #90be6d);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      text-shadow: none;
+      background: none;
+      color: #8b7a6b;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
     }
 
     .wolf-icon {
-      font-size: 2.5rem;
-      filter: drop-shadow(0 0 4px #6b7f8f);
+      font-size: 2rem;
+      filter: drop-shadow(0 0 2px #666);
       transition: transform 0.2s ease;
     }
 
+    body.rainbow-mode .wolf-icon {
+      filter: drop-shadow(0 0 2px #c4b5a5);
+    }
+
     .dynamic-emoji {
-      font-size: 2.4rem;
+      font-size: 2rem;
       transition: all 0.2s;
     }
 
     .timer-box {
       display: flex;
       justify-content: center;
-      gap: 1.2rem;
+      gap: 0.8rem;
       flex-wrap: wrap;
-      margin: 2rem 0 1.8rem;
+      margin: 2rem 0 1.5rem;
     }
 
     .time-unit {
-      background: rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(4px);
       padding: 1rem 0.8rem;
-      border-radius: 2rem;
-      min-width: 100px;
+      border-radius: 8px;
+      min-width: 85px;
       text-align: center;
       transition: 0.2s;
-      border: 1px solid rgba(255,255,240,0.15);
+      border: 1px solid rgba(255,255,200,0.1);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.2);
     }
 
     body.rainbow-mode .time-unit {
-      background: rgba(255, 245, 200, 0.7);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      border: 1px solid #ffdf8c;
+      background: rgba(245, 240, 235, 0.6);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      border: 1px solid rgba(160, 140, 120, 0.15);
     }
 
     .time-number {
-      font-size: 3.2rem;
-      font-weight: 800;
+      font-size: 2.8rem;
+      font-weight: 700;
       font-family: 'Courier New', monospace;
-      color: var(--text-primary);
-      text-shadow: 0 0 8px var(--text-glow);
-      letter-spacing: 4px;
+      color: #d0d0d0;
+      text-shadow: 0 0 3px #888;
+      letter-spacing: 2px;
+    }
+
+    body.rainbow-mode .time-number {
+      color: #8b7a6b;
+      text-shadow: 0 0 1px #c4b5a5;
     }
 
     .time-label {
-      font-size: 0.9rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
-      font-weight: 600;
+      font-weight: 400;
       letter-spacing: 2px;
-      color: #999999;
+      color: #999;
+      font-family: monospace;
     }
 
     body.rainbow-mode .time-label {
-      color: #5e2a84;
-      font-weight: bold;
+      color: #a08c7a;
+      letter-spacing: 1px;
     }
 
     .status-message {
-      font-size: 1.2rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 500;
       margin: 1rem 0;
       padding: 0.7rem;
-      border-radius: 60px;
-      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      background: rgba(0,0,0,0.4);
       transition: 0.2s;
       color: #c0c0c0;
+      font-family: monospace;
     }
 
     body.rainbow-mode .status-message {
-      background: #fff0cfaa;
-      color: #a24e1f;
-      box-shadow: 0 4px 12px #ffd966;
+      background: rgba(245, 240, 235, 0.5);
+      color: #8b7a6b;
+      box-shadow: none;
     }
 
     .wolf-quote {
       font-style: italic;
-      font-size: 0.9rem;
-      opacity: 0.8;
+      font-size: 0.85rem;
+      opacity: 0.7;
       margin-top: 10px;
-      padding: 8px;
-      color: #b0b0b0;
+      padding: 6px;
+      color: #aaa;
+      font-family: monospace;
+    }
+
+    body.rainbow-mode .wolf-quote {
+      color: #a09080;
     }
 
     .settings-panel {
-      margin-top: 2rem;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 2rem;
-      padding: 1.2rem;
+      margin-top: 1.5rem;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      padding: 1rem;
       backdrop-filter: blur(4px);
     }
 
     body.rainbow-mode .settings-panel {
-      background: #ffe6b0cc;
+      background: rgba(245, 240, 235, 0.5);
     }
 
     .input-group {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 0.8rem;
+      gap: 0.6rem;
       align-items: baseline;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
     }
 
     .input-group label {
-      font-weight: 600;
-      font-size: 1rem;
-      color: #c0c0c0;
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: #b0b0b0;
+      font-family: monospace;
+    }
+
+    body.rainbow-mode .input-group label {
+      color: #8b7a6b;
     }
 
     .datetime-input {
-      background: #1e2a2f;
-      border: 1px solid #8faaaf;
-      padding: 10px 14px;
-      border-radius: 50px;
+      background: #2a2a2a;
+      border: 1px solid #6a6a6a;
+      padding: 8px 12px;
+      border-radius: 8px;
       font-family: monospace;
-      font-size: 1rem;
-      color: #f0f3fa;
+      font-size: 0.85rem;
+      color: #d0d0d0;
       outline: none;
     }
 
     body.rainbow-mode .datetime-input {
-      background: #fff4e0;
-      color: #3b2c1f;
-      border: 1px solid #ffb347;
+      background: #fffefc;
+      color: #8b7a6b;
+      border: 1px solid #d4c5b0;
     }
 
     button {
       background: var(--btn-bg);
       border: none;
-      padding: 10px 24px;
-      border-radius: 40px;
-      font-weight: bold;
-      font-size: 0.9rem;
-      color: #1f1b14;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: #ddd;
       cursor: pointer;
       transition: 0.2s;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      font-family: monospace;
+    }
+
+    body.rainbow-mode button {
+      color: #8b7a6b;
+      background: #e8ddd0;
     }
 
     button:hover {
       background: var(--btn-hover);
-      transform: scale(0.97);
+      transform: scale(0.96);
     }
 
     .current-target {
-      font-size: 0.75rem;
-      margin-top: 10px;
+      font-size: 0.7rem;
+      margin-top: 8px;
       font-family: monospace;
       word-break: break-all;
-      color: #aaaaaa;
+      color: #999;
+    }
+
+    body.rainbow-mode .current-target {
+      color: #a09080;
     }
 
     .loading-indicator {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       margin-top: 5px;
-      color: #888888;
+      color: #888;
     }
 
     footer {
-      margin-top: 2rem;
-      font-size: 0.7rem;
-      opacity: 0.7;
-      color: #888888;
+      margin-top: 1.5rem;
+      font-size: 0.6rem;
+      opacity: 0.6;
+      color: #888;
+      font-family: monospace;
+    }
+
+    body.rainbow-mode footer {
+      color: #a09080;
     }
 
     @media (max-width: 550px) {
-      .countdown-card { padding: 1.5rem; }
-      .time-number { font-size: 2.2rem; }
-      .time-unit { min-width: 70px; padding: 0.6rem 0.2rem; }
-      .title-section h1 { font-size: 1.8rem; }
-      .status-message { font-size: 1rem; }
+      .countdown-card { padding: 1.2rem; }
+      .time-number { font-size: 2rem; }
+      .time-unit { min-width: 65px; padding: 0.5rem 0.2rem; }
+      .title-section h1 { font-size: 1.5rem; }
+      .status-message { font-size: 0.9rem; }
     }
   </style>
 </head>
 <body>
 <div class="wolf-bg-overlay"></div>
-<div class="rainbow-extra">🌈✨🦄🌈✨</div>
+<div class="rainbow-extra">✦ ˚₊‧⁺˖♡</div>
 
 <div class="countdown-card">
   <div class="title-section">
@@ -349,18 +396,18 @@
 
   <div class="settings-panel">
     <div class="input-group">
-      <label>📅 Set Target (for everyone):</label>
+      <label> Set Target grrrr:</label>
       <input type="datetime-local" id="targetDateTime" class="datetime-input" step="1">
       <button id="updateTargetBtn">🕒 Set for Everyone</button>
     </div>
     
     <div class="current-target" id="currentTargetDisplay">
-      🎯 Loading shared target...
+       Loading shared target...
     </div>
     <div class="loading-indicator" id="loadingIndicator"></div>
-    <div style="font-size:0.7rem; margin-top:8px;">💡 Anyone who visits will see the same countdown! Pick a date/time.</div>
+    <div style="font-size:0.6rem; margin-top:8px;">meow</div>
   </div>
-  <footer>🐺 shared countdown · everyone sees the same time</footer>
+  <footer>woaah u wanna buy yani a monster soooooo bad</footer>
 </div>
 
 <script>
@@ -579,7 +626,7 @@
       if (!bodyElement.classList.contains('rainbow-mode')) {
         bodyElement.classList.add('rainbow-mode');
       }
-      themeEmojiSpan.innerHTML = "🌈🎉";
+      themeEmojiSpan.innerHTML = "✦";
       if (statusMsgDiv.innerText !== "its over") {
         statusMsgDiv.innerHTML = "its over";
       }
@@ -644,7 +691,7 @@
       const formatted = currentTargetDate.toLocaleString(undefined, { 
         year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' 
       });
-      currentTargetDisplaySpan.innerHTML = `🎯 Shared target: ${formatted} (everyone sees this)`;
+      currentTargetDisplaySpan.innerHTML = `target: ${formatted}`;
       targetDateTimeInput.value = formatDatetimeLocal(currentTargetDate);
     }
   }
